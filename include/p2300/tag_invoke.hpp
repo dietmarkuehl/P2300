@@ -37,9 +37,9 @@ namespace std {
         void tag_invoke();
 
         template <class _Ty>
-        concept _Has_class_or_enum_type = __is_class(remove_reference_t<_Ty>)
-            || __is_enum(remove_reference_t<_Ty>)
-            || __is_union(remove_reference_t<_Ty>);
+        concept _Has_class_or_enum_type = is_class_v<remove_reference_t<_Ty>>
+            || is_enum_v<remove_reference_t<_Ty>>
+            || is_union_v<remove_reference_t<_Ty>>;
 
         template <class _Tag, class... _Args>
         concept _Tag_invocable_no_adl = _Has_class_or_enum_type<_Tag> && requires {
