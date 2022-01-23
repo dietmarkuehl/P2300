@@ -1,6 +1,6 @@
-// include/p2300/non_associated.hpp                                   -*-C++-*-
+// std-headers/execution                                              -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,35 +23,13 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
-#define INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
-
-// ----------------------------------------------------------------------------
-// [lib.tmpl-head]
-
-#include <type_traits>
-
-namespace std
-{
-    template <class _Ty>
-    struct _Non_associated_entity
-    {
-        struct _Type
-        {
-            using type = _Ty;
-        };
-    };
-
-    template <class _Ty>
-    using __unassociate = typename _Non_associated_entity<_Ty>::_Type;
-
-    template <class _Ty>
-    using __reassociate = typename _Ty::type;
-
-    template <class _Ty>
-    concept __non_associated = same_as<_Ty, __unassociate<__reassociate<_Ty>>>;
-} // namespace std
+#ifndef INCLUDED_STD_HEADERS_EXECUTION
+#define INCLUDED_STD_HEADERS_EXECUTION
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#include <execution.hpp>
+
+// ----------------------------------------------------------------------------
+
+#endif

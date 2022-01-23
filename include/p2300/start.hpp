@@ -1,6 +1,6 @@
-// include/p2300/non_associated.hpp                                   -*-C++-*-
+// include/p2300/start.hpp                                            -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,35 +23,31 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
-#define INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#ifndef INCLUDED_INCLUDE_P2300_START
+#define INCLUDED_INCLUDE_P2300_START
+
+#include <functional.hpp>
 
 // ----------------------------------------------------------------------------
-// [lib.tmpl-head]
 
-#include <type_traits>
-
-namespace std
-{
-    template <class _Ty>
-    struct _Non_associated_entity
-    {
-        struct _Type
-        {
-            using type = _Ty;
+namespace std {
+    namespace _Start {
+        class _Cpo {
+        public:
+            template <class _OperationState>
+                requires nothrow_tag_invokable<_Cpo, _OperationState>
+            auto operator()(_OperationState& __state) const noexcept -> void
+            {
+                tag_invoke(*this, __state);
+            }
         };
-    };
+    }
 
-    template <class _Ty>
-    using __unassociate = typename _Non_associated_entity<_Ty>::_Type;
-
-    template <class _Ty>
-    using __reassociate = typename _Ty::type;
-
-    template <class _Ty>
-    concept __non_associated = same_as<_Ty, __unassociate<__reassociate<_Ty>>>;
-} // namespace std
+    inline namespace _Cpos {
+        inline constexpr _Start::_Cpo start;
+    }
+}
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#endif

@@ -30,6 +30,7 @@
 
 #include <execution>
 #include <p2300/movable_value.hpp>
+#include <p2300/start.hpp>
 
 // ----------------------------------------------------------------------------
 
