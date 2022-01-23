@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install recent gcc
+      sudo apt install gcc-11
+
     - uses: actions/checkout@v2
 
     - name: Configure CMake
