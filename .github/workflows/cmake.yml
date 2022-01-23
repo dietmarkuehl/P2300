@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: Install recent gcc
-      sudo apt install gcc-11
+      run: sudo apt install gcc-11
 
     - uses: actions/checkout@v2
 
