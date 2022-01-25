@@ -30,6 +30,7 @@ list(APPEND test_exposition_only
     test/nothrow_callable.cpp
     test/call_result_t.cpp
     test/tag_invoke.cpp
+    test/movable_value.cpp
     )
 
 list(APPEND test_components

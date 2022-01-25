@@ -1,4 +1,4 @@
-// test/test-config.hpp                                               -*-C++-*-
+// include/p2300/moveable.hpp                                       -*-C++-*-
 // ----------------------------------------------------------------------------
 //  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
@@ -23,29 +23,20 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_TEST_TEST_CONFIG
-#define INCLUDED_TEST_TEST_CONFIG
+#ifndef INCLUDED_INCLUDE_P2300_MOVABLE_VALUE
+#define INCLUDED_INCLUDE_P2300_MOVABLE_VALUE
 
 // ----------------------------------------------------------------------------
-// The top-level namespace for P2300 entities; std for the standard library.
+// [exec.moveable]
+#include <type_traits>
 
-#define P2300_std std
+namespace std::execution
+{
+    template <class _Ty>
+    concept _Movable_value = move_constructible<remove_cvref_t<_Ty>> && constructible_from<remove_cvref_t<_Ty>, _Ty>;
 
-// ----------------------------------------------------------------------------
-// Names for the standard library header files.
-
-#define P2300_functional <functional.hpp>
-#define P2300_execution <execution.hpp>
-#define P2300_type_traits <type_traits>
-
-// ----------------------------------------------------------------------------
-// Fully qualified names for exposition-only entities: use own name or don't
-// define to disable corresponding tests.
-
-#define P2300_callable ::std::_Callable
-#define P2300_nothrow_callable ::std::_Nothrow_callable
-#define P2300_call_result_t ::std::_Call_result_t
+} // namespace std
 
 // ----------------------------------------------------------------------------
 
-#endif
+#endif // INCLUDED_INCLUDE_P2300_MOVABLE_VALUE
