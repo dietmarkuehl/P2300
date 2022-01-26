@@ -30,6 +30,7 @@
 
 #include <functional>
 #include <p2300/callable.hpp>
+#include <p2300/non_associated.hpp>
 #include <p2300/tag_invoke.hpp>
 
 // ----------------------------------------------------------------------------
