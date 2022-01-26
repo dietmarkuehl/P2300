@@ -42,3 +42,19 @@ TEST(non_associated, smoke_test)
     static_assert(is_invocable_v<meow, __unassociate<int>>);
     static_assert(same_as<int, __reassociate<__unassociate<int>>>);
 }
+
+namespace non_associated {
+    struct woof {};
+    constexpr void test_associated(auto);
+}
+
+template <typename, class = void>
+constexpr bool is_associated = false;
+template <typename T>
+constexpr bool is_associated<T, void_t<decltype(test_associated(declval<T>()))>> = true;
+
+TEST(non_associated, test_adl)
+{
+    static_assert(is_associated<non_associated::woof>);
+    static_assert(!is_associated<__unassociate<non_associated::woof>>);
+}
