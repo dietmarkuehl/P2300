@@ -37,59 +37,65 @@ struct aggregate
 TEST(movable_value, with_cv_ref)
 {
     static_assert(execution::_Movable_value<aggregate>);
-    static_assert(execution::_Movable_value<aggregate &>);
-    static_assert(execution::_Movable_value<const aggregate &>);
+    static_assert(execution::_Movable_value<aggregate&>);
+    static_assert(execution::_Movable_value<const aggregate&>);
     static_assert(execution::_Movable_value<const aggregate>);
 }
 
 struct move_only
 {
-    move_only(const move_only &) = delete;
-    move_only &operator=(const move_only &) = delete;
+    move_only(const move_only&) = delete;
+    move_only& operator=(const move_only&) = delete;
 };
 TEST(movable_value, move_only)
 {
     static_assert(!execution::_Movable_value<move_only>);
-    static_assert(!execution::_Movable_value<move_only &>);
-    static_assert(!execution::_Movable_value<const move_only &>);
+    static_assert(!execution::_Movable_value<move_only&>);
+    static_assert(!execution::_Movable_value<const move_only&>);
     static_assert(!execution::_Movable_value<const move_only>);
 }
 
 struct copy_only
 {
-    copy_only(copy_only &&) = delete;
-    copy_only &operator=(copy_only &&) = delete;
+    copy_only(copy_only&&) = delete;
+    copy_only& operator=(copy_only&&) = delete;
 };
 TEST(movable_value, copy_only)
 {
     static_assert(!execution::_Movable_value<copy_only>);
-    static_assert(!execution::_Movable_value<copy_only &>);
-    static_assert(!execution::_Movable_value<const copy_only &>);
+    static_assert(!execution::_Movable_value<copy_only&>);
+    static_assert(!execution::_Movable_value<const copy_only&>);
     static_assert(!execution::_Movable_value<const copy_only>);
 }
 
 struct not_assignable
 {
-    not_assignable &operator=(const not_assignable &) = delete;
-    not_assignable &operator=(not_assignable &&) = delete;
+    not_assignable& operator=(const not_assignable&) = delete;
+    not_assignable& operator=(not_assignable&&) = delete;
 };
 TEST(movable_value, not_assignable)
 {
     static_assert(!execution::_Movable_value<not_assignable>);
-    static_assert(!execution::_Movable_value<not_assignable &>);
-    static_assert(!execution::_Movable_value<const not_assignable &>);
+    static_assert(!execution::_Movable_value<not_assignable&>);
+    static_assert(!execution::_Movable_value<const not_assignable&>);
     static_assert(!execution::_Movable_value<const not_assignable>);
 }
 
 struct not_constructible
 {
-    not_constructible(const not_constructible &) = delete;
-    not_constructible(not_constructible &&) = delete;
+    not_constructible(const not_constructible&) = delete;
+    not_constructible(not_constructible&&) = delete;
 };
 TEST(movable_value, not_constructible)
 {
     static_assert(!execution::_Movable_value<not_constructible>);
-    static_assert(!execution::_Movable_value<not_constructible &>);
-    static_assert(!execution::_Movable_value<const not_constructible &>);
+    static_assert(!execution::_Movable_value<not_constructible&>);
+    static_assert(!execution::_Movable_value<const not_constructible&>);
     static_assert(!execution::_Movable_value<const not_constructible>);
+}
+
+TEST(movable_value, decay)
+{
+    static_assert(execution::_Movable_value<int[2]>);
+    static_assert(execution::_Movable_value<const int[2]>);
 }

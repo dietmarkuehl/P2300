@@ -33,7 +33,7 @@
 namespace std::execution
 {
     template <class _Ty>
-    concept _Movable_value = move_constructible<remove_cvref_t<_Ty>> && constructible_from<remove_cvref_t<_Ty>, _Ty>;
+    concept _Movable_value = move_constructible<decay_t<_Ty>> && constructible_from<decay_t<_Ty>, _Ty>;
 
 } // namespace std
 
