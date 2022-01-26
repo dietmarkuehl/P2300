@@ -1,4 +1,4 @@
-// test/test-config.hpp                                               -*-C++-*-
+// include/execution.hpp                                             -*-C++-*-
 // ----------------------------------------------------------------------------
 //  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
@@ -23,29 +23,14 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_TEST_TEST_CONFIG
-#define INCLUDED_TEST_TEST_CONFIG
-
-// ----------------------------------------------------------------------------
-// The top-level namespace for P2300 entities; std for the standard library.
-
-#define P2300_std std
-
-// ----------------------------------------------------------------------------
-// Names for the standard library header files.
-
-#define P2300_functional <functional.hpp>
-#define P2300_execution <execution.hpp>
-#define P2300_type_traits <type_traits>
-
-// ----------------------------------------------------------------------------
-// Fully qualified names for exposition-only entities: use own name or don't
-// define to disable corresponding tests.
-
-#define P2300_callable ::std::_Callable
-#define P2300_nothrow_callable ::std::_Nothrow_callable
-#define P2300_call_result_t ::std::_Call_result_t
+#ifndef INCLUDED_INCLUDE_EXECUTION
+#define INCLUDED_INCLUDE_EXECUTION
 
 // ----------------------------------------------------------------------------
 
-#endif
+#include <execution>
+#include <p2300/movable_value.hpp>
+
+// ----------------------------------------------------------------------------
+
+#endif // INCLUDED_INCLUDE_EXECUTION

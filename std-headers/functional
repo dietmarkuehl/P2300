@@ -28,7 +28,11 @@
 
 // ----------------------------------------------------------------------------
 
-#include <functional>
+#if defined(__GNUC__)
+#    include_next <functional>
+#else
+#    include <functional>
+#endif
 #include <functional.hpp>
 
 // ----------------------------------------------------------------------------
