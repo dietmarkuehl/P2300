@@ -31,11 +31,12 @@ list(APPEND test_exposition_only
     test/movable_value.cpp
     test/non_associated.cpp
     test/nothrow_callable.cpp
-    test/start.cpp
-    test/tag_invoke.cpp
     )
 
 list(APPEND test_components
+    test/operation_state.cpp
+    test/start.cpp
+    test/tag_invoke.cpp
     )
 
 add_executable(p2300_test ${test_exposition_only} ${test_components})

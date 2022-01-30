@@ -1,6 +1,6 @@
-// include/execution.hpp                                             -*-C++-*-
+// include/p2300/operation_state.hpp                                  -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,18 +23,23 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_EXECUTION
-#define INCLUDED_INCLUDE_EXECUTION
+#ifndef INCLUDED_INCLUDE_P2300_OPERATION_STATE
+#define INCLUDED_INCLUDE_P2300_OPERATION_STATE
+
+#include <concepts>
 
 // ----------------------------------------------------------------------------
-// Note: this list of headers is in order of dependency: later headers may
-// depend on earlier headers.
+// [exec.op_state]
 
-#include <execution>
-#include <p2300/movable_value.hpp>
-#include <p2300/start.hpp>
-#include <p2300/operation_state.hpp>
+namespace std::execution {
+    template <class _State>
+    concept operation_state
+        =  destructible<_State>
+        && is_object_v<_State>
+        && requires(_State& __state) { { execution::start(__state) } noexcept; }
+        ;
+}
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_EXECUTION
+#endif

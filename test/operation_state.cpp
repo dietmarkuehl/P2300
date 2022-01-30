@@ -1,4 +1,4 @@
-// include/p2300/start.hpp                                            -*-C++-*-
+// test/operation_state.hpp                                           -*-C++-*-
 // ----------------------------------------------------------------------------
 //  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
@@ -23,37 +23,38 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_START
-#define INCLUDED_INCLUDE_P2300_START
-
-#include <functional.hpp>
-#include <type_traits>
+#include "test-config.hpp"
+#include P2300_execution
+#include P2300_type_traits
+#include <gtest/gtest.h>
 
 // ----------------------------------------------------------------------------
-// [exec.op_state.start]
 
-namespace std {
-    namespace _Start {
-        class _Cpo {
-        public:
-            template <class _OperationState>
-                requires nothrow_tag_invocable<_Cpo, _OperationState>
-                    && std::is_lvalue_reference_v<_OperationState>
-            auto operator()(_OperationState&& __state) const noexcept -> void
-            {
-                tag_invoke(*this, __state);
-            }
-        };
-    }
+namespace {
+    template <bool Noexcept>
+    struct state {
+        friend void tag_invoke(std::execution::start_t, state& self) noexcept(Noexcept);
+        friend void tag_invoke(std::execution::start_t, state const& self) noexcept(Noexcept);
+    };
 
-    namespace execution {
-        inline namespace _Cpos {
-            using start_t = _Start::_Cpo;
-            inline constexpr start_t start{};
-        }
-    }
+    template <bool> // to prevent a compiler warning
+    struct indestructible_state {
+        friend void tag_invoke(std::execution::start_t, indestructible_state& self) noexcept;
+    private:
+        ~indestructible_state();
+    };
 }
 
-// ----------------------------------------------------------------------------
+TEST(start, breathing)
+{
+    static_assert(std::execution::operation_state<state<true>>);
+    static_assert(std::execution::operation_state<state<true> const>);
+    static_assert(not std::execution::operation_state<state<true>&>);
+    static_assert(not std::execution::operation_state<state<true> const&>);
 
-#endif
+    static_assert(not std::execution::operation_state<state<false>>);
+    static_assert(not std::execution::operation_state<state<false> const>);
+
+    static_assert(std::invocable<std::execution::start_t, indestructible_state<true>&>);
+    static_assert(not std::execution::operation_state<indestructible_state<true>>);
+}
