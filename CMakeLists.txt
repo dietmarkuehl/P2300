@@ -31,6 +31,7 @@ list(APPEND test_exposition_only
     test/movable_value.cpp
     test/non_associated.cpp
     test/nothrow_callable.cpp
+    test/start.cpp
     test/tag_invoke.cpp
     )
 

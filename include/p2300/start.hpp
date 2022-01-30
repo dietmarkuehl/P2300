@@ -27,6 +27,7 @@
 #define INCLUDED_INCLUDE_P2300_START
 
 #include <functional.hpp>
+#include <type_traits>
 
 // ----------------------------------------------------------------------------
 
@@ -35,16 +36,20 @@ namespace std {
         class _Cpo {
         public:
             template <class _OperationState>
-                requires nothrow_tag_invokable<_Cpo, _OperationState>
-            auto operator()(_OperationState& __state) const noexcept -> void
+                requires nothrow_tag_invocable<_Cpo, _OperationState>
+                    && std::is_lvalue_reference_v<_OperationState>
+            auto operator()(_OperationState&& __state) const noexcept -> void
             {
                 tag_invoke(*this, __state);
             }
         };
     }
 
-    inline namespace _Cpos {
-        inline constexpr _Start::_Cpo start;
+    namespace execution {
+        inline namespace _Cpos {
+            using start_t = _Start::_Cpo;
+            inline constexpr start_t start{};
+        }
     }
 }
 
