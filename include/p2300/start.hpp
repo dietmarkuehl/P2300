@@ -47,8 +47,8 @@ namespace std {
     }
 
     namespace execution {
+        using start_t = _Start::_Cpo;
         inline namespace _Cpos {
-            using start_t = _Start::_Cpo;
             inline constexpr start_t start{};
         }
     }

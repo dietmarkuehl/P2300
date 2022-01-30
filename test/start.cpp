@@ -33,48 +33,98 @@
 namespace {
     template <bool Noexcept>
     struct state {
-        bool* d_started;
+        int* d_started;
+        friend void tag_invoke(std::execution::start_t, state&&) noexcept(Noexcept) {
+        }
         friend void tag_invoke(std::execution::start_t, state& self) noexcept(Noexcept) {
-            *self.d_started = true;
+            *self.d_started = 1;
         }
         friend void tag_invoke(std::execution::start_t, state const& self) noexcept(Noexcept) {
-            *self.d_started = true;
+            *self.d_started = 2;
         }
+    };
+
+    class indestructible_state {
+    private:
+        int* d_started;
+        ~indestructible_state() {}
+
+    public:
+        friend void tag_invoke(std::execution::start_t, indestructible_state& self) noexcept {
+            *self.d_started = 3;
+        }
+
+        indestructible_state(int* started): d_started(started) {}
+        static void destroy(indestructible_state* state) { delete state; }
     };
 }
 
-TEST(start, static_properties)
+TEST(start, static_properties_nonthrowing)
 {
+    // verify test class
     static_assert(noexcept(tag_invoke(std::execution::start, std::declval<state<true>>())));
-    static_assert(noexcept(std::tag_invoke(std::execution::start, std::declval<state<true>>())));
+    static_assert(noexcept(tag_invoke(std::execution::start, std::declval<state<true>&&>())));
+    static_assert(noexcept(tag_invoke(std::execution::start, std::declval<state<true>&>())));
+    static_assert(noexcept(tag_invoke(std::execution::start, std::declval<state<true> const&>())));
+
+    // rvalues can't be used via the start CPO
     static_assert(not std::invocable<std::execution::start_t, state<true>>);
+    static_assert(not std::invocable<std::execution::start_t, state<true>&&>);
+
+    // lvalues can be used via the start CPO and don't throw
+    static_assert(noexcept(std::tag_invoke(std::execution::start, std::declval<state<true>&>())));
+    static_assert(noexcept(std::tag_invoke(std::execution::start, std::declval<state<true> const&>())));
     static_assert(std::is_nothrow_invocable_v<std::execution::start_t, state<true>&>);
     static_assert(std::is_nothrow_invocable_v<std::execution::start_t, state<true> const&>);
+}
 
+TEST(start, static_properties_throwing)
+{
+    // verify test class
     static_assert(not noexcept(tag_invoke(std::execution::start, std::declval<state<false>>())));
-    static_assert(not noexcept(std::tag_invoke(std::execution::start, std::declval<state<false>>())));
-    static_assert(not std::nothrow_tag_invocable<std::execution::start_t, state<false>&>);
+    static_assert(not noexcept(tag_invoke(std::execution::start, std::declval<state<false>&&>())));
+    static_assert(not noexcept(tag_invoke(std::execution::start, std::declval<state<false>&>())));
+    static_assert(not noexcept(tag_invoke(std::execution::start, std::declval<state<false> const&>())));
+
+    // none of the operations work via the start CPO if they'd throw
     static_assert(not std::invocable<std::execution::start_t, state<false>>);
+    static_assert(not std::invocable<std::execution::start_t, state<false>&&>);
     static_assert(not std::invocable<std::execution::start_t, state<false>&>);
     static_assert(not std::invocable<std::execution::start_t, state<false> const&>);
 }
 
 TEST(start, non_const_behavior)
 {
-    bool        started{false};
+    int         started{0};
     state<true> s{&started};
 
-    ASSERT_FALSE(started);
+    ASSERT_EQ(started, 0);
     std::execution::start(s);
-    EXPECT_TRUE(started);
+    EXPECT_EQ(started, 1);
 }
 
 TEST(start, const_behavior)
 {
-    bool              started{false};
+    int               started{0};
     state<true> const s{&started};
 
-    ASSERT_FALSE(started);
+    ASSERT_EQ(started, 0);
     std::execution::start(s);
-    EXPECT_TRUE(started);
+    EXPECT_EQ(started, 2);
+}
+
+TEST(start, indestructible_state)
+{
+    static_assert(noexcept(tag_invoke(std::execution::start, std::declval<indestructible_state&>())));
+    static_assert(noexcept(std::tag_invoke(std::execution::start, std::declval<indestructible_state&>())));
+    static_assert(std::is_nothrow_invocable_v<std::execution::start_t, indestructible_state&>);
+
+    int   started{0};
+    auto* s(new indestructible_state(&started));
+
+    ASSERT_EQ(started, 0);
+    std::execution::start(*s);
+    EXPECT_EQ(started, 3);
+
+    indestructible_state::destroy(s);
 }

@@ -34,8 +34,8 @@
 // ----------------------------------------------------------------------------
 // Names for the standard library header files.
 
-#define P2300_functional <functional.hpp>
 #define P2300_execution <execution.hpp>
+#define P2300_functional <functional.hpp>
 #define P2300_type_traits <type_traits>
 
 // ----------------------------------------------------------------------------
