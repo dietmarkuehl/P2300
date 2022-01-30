@@ -11,9 +11,9 @@ can be reported on the [P2300 issue tracker](https://github.com/brycelelbach/wg2
 
 - `operation_state`
 
-    template <class S>
-    concept operation_state
-        =  destructible<S>
-        && is_object_v<S>
-        && requires(S& s) { { execution::start(s) } noexcept; }
-        ;
+        template <class S>
+        concept operation_state
+            =  destructible<S>
+            && is_object_v<S>
+            && requires(S& s) { { execution::start(s) } noexcept; }
+            ;
