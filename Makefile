@@ -2,7 +2,7 @@ COMPILER = gcc
 
 BUILDDIR = build/$(COMPILER)
 
-.PHONY: default clean config build test
+.PHONY: default distclean clean config build test
 
 default: config build test
 
@@ -17,5 +17,7 @@ test: build
 	cd $(BUILDDIR); ./p2300_test
 
 clean:
-	cd $(BUILDDIR); $(MAKE) clean
 	$(RM) mkerr olderr
+
+distclean: clean
+	cd $(BUILDDIR); $(MAKE) clean

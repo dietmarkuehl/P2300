@@ -1,6 +1,6 @@
-// include/p2300/non_associated.hpp                                   -*-C++-*-
+// test/operation_state.hpp                                           -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,35 +23,38 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
-#define INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#include "test-config.hpp"
+#include P2300_execution
+#include P2300_type_traits
+#include <gtest/gtest.h>
 
 // ----------------------------------------------------------------------------
-// [lib.tmpl-head]
 
-#include <type_traits>
-
-namespace std
-{
-    template <class _Ty>
-    struct _Non_associated_entity
-    {
-        struct _Type
-        {
-            using type = _Ty;
-        };
+namespace {
+    template <bool Noexcept>
+    struct state {
+        friend void tag_invoke(std::execution::start_t, state&) noexcept(Noexcept) {}
+        friend void tag_invoke(std::execution::start_t, state const&) noexcept(Noexcept) {}
     };
 
-    template <class _Ty>
-    using __unassociate = typename _Non_associated_entity<_Ty>::_Type;
+    template <bool> // to prevent a compiler warning
+    struct indestructible_state {
+        friend void tag_invoke(std::execution::start_t, indestructible_state&) noexcept {}
+    private:
+        ~indestructible_state();
+    };
+}
 
-    template <class _Ty>
-    using __reassociate = typename _Ty::type;
+TEST(start, breathing)
+{
+    static_assert(std::execution::operation_state<state<true>>);
+    static_assert(std::execution::operation_state<state<true> const>);
+    static_assert(not std::execution::operation_state<state<true>&>);
+    static_assert(not std::execution::operation_state<state<true> const&>);
 
-    template <class _Ty>
-    concept __non_associated = same_as<_Ty, __unassociate<__reassociate<_Ty>>>;
-} // namespace std
+    static_assert(not std::execution::operation_state<state<false>>);
+    static_assert(not std::execution::operation_state<state<false> const>);
 
-// ----------------------------------------------------------------------------
-
-#endif // INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+    static_assert(std::invocable<std::execution::start_t, indestructible_state<true>&>);
+    static_assert(not std::execution::operation_state<indestructible_state<true>>);
+}

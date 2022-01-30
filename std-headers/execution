@@ -1,6 +1,6 @@
-// include/execution.hpp                                             -*-C++-*-
+// std-headers/execution                                              -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,18 +23,18 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_EXECUTION
-#define INCLUDED_INCLUDE_EXECUTION
-
-// ----------------------------------------------------------------------------
-// Note: this list of headers is in order of dependency: later headers may
-// depend on earlier headers.
-
-#include <execution>
-#include <p2300/movable_value.hpp>
-#include <p2300/start.hpp>
-#include <p2300/operation_state.hpp>
+#ifndef INCLUDED_STD_HEADERS_EXECUTION
+#define INCLUDED_STD_HEADERS_EXECUTION
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_EXECUTION
+#if defined(__GNUC__)
+#    include_next <execution>
+#else
+#    include <execution>
+#endif
+#include <execution.hpp>
+
+// ----------------------------------------------------------------------------
+
+#endif

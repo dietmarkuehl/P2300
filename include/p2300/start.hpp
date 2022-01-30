@@ -1,6 +1,6 @@
-// include/execution.hpp                                             -*-C++-*-
+// include/p2300/start.hpp                                            -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,18 +23,37 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_EXECUTION
-#define INCLUDED_INCLUDE_EXECUTION
+#ifndef INCLUDED_INCLUDE_P2300_START
+#define INCLUDED_INCLUDE_P2300_START
+
+#include <functional.hpp>
+#include <type_traits>
 
 // ----------------------------------------------------------------------------
-// Note: this list of headers is in order of dependency: later headers may
-// depend on earlier headers.
+// [exec.op_state.start]
 
-#include <execution>
-#include <p2300/movable_value.hpp>
-#include <p2300/start.hpp>
-#include <p2300/operation_state.hpp>
+namespace std {
+    namespace _Start {
+        class _Cpo {
+        public:
+            template <class _OperationState>
+                requires nothrow_tag_invocable<_Cpo, _OperationState>
+                    && std::is_lvalue_reference_v<_OperationState>
+            auto operator()(_OperationState&& __state) const noexcept -> void
+            {
+                tag_invoke(*this, __state);
+            }
+        };
+    }
+
+    namespace execution {
+        using start_t = _Start::_Cpo;
+        inline namespace _Cpos {
+            inline constexpr start_t start{};
+        }
+    }
+}
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_EXECUTION
+#endif
