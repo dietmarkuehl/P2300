@@ -33,13 +33,13 @@
 namespace {
     template <bool Noexcept>
     struct state {
-        friend void tag_invoke(std::execution::start_t, state& self) noexcept(Noexcept);
-        friend void tag_invoke(std::execution::start_t, state const& self) noexcept(Noexcept);
+        friend void tag_invoke(std::execution::start_t, state&) noexcept(Noexcept) {}
+        friend void tag_invoke(std::execution::start_t, state const&) noexcept(Noexcept) {}
     };
 
     template <bool> // to prevent a compiler warning
     struct indestructible_state {
-        friend void tag_invoke(std::execution::start_t, indestructible_state& self) noexcept;
+        friend void tag_invoke(std::execution::start_t, indestructible_state&) noexcept {}
     private:
         ~indestructible_state();
     };
