@@ -1,4 +1,4 @@
-// include/p2300/start.hpp                                            -*-C++-*-
+// include/p2300/set_stopped.hpp                                      -*-C++-*-
 // ----------------------------------------------------------------------------
 //  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
@@ -23,33 +23,33 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_START
-#define INCLUDED_INCLUDE_P2300_START
+#ifndef INCLUDED_INCLUDE_P2300_SET_STOPPED
+#define INCLUDED_INCLUDE_P2300_SET_STOPPED
 
-#include <functional.hpp>
+#include <functional>
 #include <type_traits>
+#include <utility>
 
 // ----------------------------------------------------------------------------
-// [exec.op_state.start]
+// [exec.set_stopped]
 
 namespace std {
-    namespace _Start {
+    namespace _Set_stopped {
         class _Cpo {
         public:
-            template <class _OperationState>
-                requires nothrow_tag_invocable<_Cpo, _OperationState>
-                    && std::is_lvalue_reference_v<_OperationState>
-            auto operator()(_OperationState&& __state) const noexcept -> void
+            template <class _Receiver>
+                requires nothrow_tag_invocable<_Cpo, _Receiver>
+            auto operator()(_Receiver&& __receiver) const noexcept -> void
             {
-                std::tag_invoke(*this, __state);
+                std::tag_invoke(*this, std::forward<_Receiver>(__receiver));
             }
         };
     }
 
     namespace execution {
-        using start_t = _Start::_Cpo;
+        using set_stopped_t = _Set_stopped::_Cpo;
         inline namespace _Cpos {
-            inline constexpr start_t start{};
+            inline constexpr set_stopped_t set_stopped{};
         }
     }
 }

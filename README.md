@@ -15,5 +15,10 @@ can be reported on the [P2300 issue tracker](https://github.com/brycelelbach/wg2
         concept operation_state
             =  destructible<S>
             && is_object_v<S>
-            && requires(S& s) { { execution::start(s) } noexcept; }
+            && requires(S& s) { { <a href="#start-cpo">execution::start(s)</a> } noexcept; }
             ;
+
+## Customization Point Overview
+
+- <a name="set_stopped-cpo">`set_stopped(auto&& receiver) noexcept -> void`</a>
+- <a name="start-cpo">`start(auto& state) noexcept -> void`</a>

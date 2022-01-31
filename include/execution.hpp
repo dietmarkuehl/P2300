@@ -32,6 +32,7 @@
 
 #include <execution>
 #include <p2300/movable_value.hpp>
+#include <p2300/set_stopped.hpp>
 #include <p2300/start.hpp>
 #include <p2300/operation_state.hpp>
 
