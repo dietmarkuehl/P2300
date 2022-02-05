@@ -60,6 +60,7 @@ list(APPEND test_exposition_only
 
 list(APPEND test_components
     test/operation_state.cpp
+    test/set_error.cpp
     test/set_stopped.cpp
     test/start.cpp
     test/tag_invoke.cpp

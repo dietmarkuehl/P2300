@@ -1,6 +1,6 @@
-// include/execution.hpp                                             -*-C++-*-
+// include/p2300/set_error.hpp                                        -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,20 +23,32 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_EXECUTION
-#define INCLUDED_INCLUDE_EXECUTION
-
-// ----------------------------------------------------------------------------
-// Note: this list of headers is in order of dependency: later headers may
-// depend on earlier headers.
-
-#include <execution>
-#include <p2300/movable_value.hpp>
-#include <p2300/set_error.hpp>
-#include <p2300/set_stopped.hpp>
-#include <p2300/start.hpp>
-#include <p2300/operation_state.hpp>
+#ifndef INCLUDED_INCLUDE_P2300_SET_ERROR
+#define INCLUDED_INCLUDE_P2300_SET_ERROR
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_EXECUTION
+namespace std {
+    namespace _Set_error {
+        class _Cpo {
+        public:
+            template <class _Receiver, class _Error>
+                requires nothrow_tag_invocable<_Cpo, _Receiver, _Error>
+            auto operator()(_Receiver&& __receiver, _Error&& __error) const noexcept -> void
+            {
+                std::tag_invoke(*this, std::forward<_Receiver>(__receiver), std::forward<_Error>(__error));
+            }
+        };
+    }
+
+    namespace execution {
+        using set_error_t = _Set_error::_Cpo;
+        inline namespace _Cpos {
+            inline constexpr set_error_t set_error{};
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+
+#endif

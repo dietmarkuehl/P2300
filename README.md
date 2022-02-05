@@ -20,5 +20,6 @@ can be reported on the [P2300 issue tracker](https://github.com/brycelelbach/wg2
 
 ## Customization Point Overview
 
+- <a name="set_error-cpo">`set_error(auto&& receiver, auto&& error) noexcept -> void`</a>
 - <a name="set_stopped-cpo">`set_stopped(auto&& receiver) noexcept -> void`</a>
 - <a name="start-cpo">`start(auto& state) noexcept -> void`</a>
