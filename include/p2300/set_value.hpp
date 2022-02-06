@@ -1,6 +1,6 @@
-// include/execution.hpp                                             -*-C++-*-
+// include/p2300/set_value.hpp                                        -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -23,21 +23,36 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_EXECUTION
-#define INCLUDED_INCLUDE_EXECUTION
+#ifndef INCLUDED_INCLUDE_P2300_SET_VALUE
+#define INCLUDED_INCLUDE_P2300_SET_VALUE
 
-// ----------------------------------------------------------------------------
-// Note: this list of headers is in order of dependency: later headers may
-// depend on earlier headers.
-
-#include <execution>
-#include <p2300/movable_value.hpp>
-#include <p2300/set_error.hpp>
-#include <p2300/set_stopped.hpp>
-#include <p2300/set_value.hpp>
-#include <p2300/start.hpp>
-#include <p2300/operation_state.hpp>
+#include <functional>
+#include <utility>
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_EXECUTION
+namespace std {
+    namespace _Set_value {
+        class _Cpo {
+        public:
+            template <class _Receiver, class... _Args>
+                requires nothrow_tag_invocable<_Cpo, _Receiver, _Args...>
+            auto operator()(_Receiver&& __receiver, _Args&&... __args) const noexcept -> void
+            {
+                std::tag_invoke(*this, std::forward<_Receiver>(__receiver), std::forward<_Args>(__args)...);
+            }
+        };
+    }
+
+    namespace execution {
+        using set_value_t = _Set_value::_Cpo;
+        inline namespace _Cpos {
+            inline constexpr set_value_t set_value{};
+        }
+    }
+}
+
+
+// ----------------------------------------------------------------------------
+
+#endif

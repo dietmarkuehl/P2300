@@ -27,7 +27,6 @@
 #define INCLUDED_INCLUDE_P2300_SET_STOPPED
 
 #include <functional>
-#include <type_traits>
 #include <utility>
 
 // ----------------------------------------------------------------------------

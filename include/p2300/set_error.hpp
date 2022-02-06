@@ -26,6 +26,9 @@
 #ifndef INCLUDED_INCLUDE_P2300_SET_ERROR
 #define INCLUDED_INCLUDE_P2300_SET_ERROR
 
+#include <functional>
+#include <utility>
+
 // ----------------------------------------------------------------------------
 
 namespace std {
