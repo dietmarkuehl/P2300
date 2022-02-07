@@ -1,6 +1,6 @@
 // test/test-config.hpp                                               -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -36,6 +36,7 @@
 
 #define P2300_execution <execution.hpp>
 #define P2300_functional <functional.hpp>
+#define P2300_tuple <tuple>
 #define P2300_type_traits <type_traits>
 
 // ----------------------------------------------------------------------------

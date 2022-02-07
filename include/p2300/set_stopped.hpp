@@ -1,4 +1,4 @@
-// include/p2300/non_associated.hpp                                   -*-C++-*-
+// include/p2300/set_stopped.hpp                                      -*-C++-*-
 // ----------------------------------------------------------------------------
 //  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
@@ -23,35 +23,36 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
-#define INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#ifndef INCLUDED_INCLUDE_P2300_SET_STOPPED
+#define INCLUDED_INCLUDE_P2300_SET_STOPPED
+
+#include <functional>
+#include <utility>
 
 // ----------------------------------------------------------------------------
-// [lib.tmpl-head]
+// [exec.set_stopped]
 
-#include <type_traits>
-
-namespace std
-{
-    template <class _Ty>
-    struct _Non_associated_entity
-    {
-        struct _Type
-        {
-            using type = _Ty;
+namespace std {
+    namespace _Set_stopped {
+        class _Cpo {
+        public:
+            template <class _Receiver>
+                requires nothrow_tag_invocable<_Cpo, _Receiver>
+            auto operator()(_Receiver&& __receiver) const noexcept -> void
+            {
+                std::tag_invoke(*this, std::forward<_Receiver>(__receiver));
+            }
         };
-    };
+    }
 
-    template <class _Ty>
-    using __unassociate = typename _Non_associated_entity<_Ty>::_Type;
-
-    template <class _Ty>
-    using __reassociate = typename _Ty::type;
-
-    template <class _Ty>
-    concept __non_associated = same_as<_Ty, __unassociate<__reassociate<_Ty>>>;
-} // namespace std
+    namespace execution {
+        using set_stopped_t = _Set_stopped::_Cpo;
+        inline namespace _Cpos {
+            inline constexpr set_stopped_t set_stopped{};
+        }
+    }
+}
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#endif

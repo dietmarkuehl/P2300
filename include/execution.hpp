@@ -1,6 +1,6 @@
 // include/execution.hpp                                             -*-C++-*-
 // ----------------------------------------------------------------------------
-//  Copyright (C) 2021 Dietmar Kuehl http://www.dietmar-kuehl.de
+//  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -32,6 +32,9 @@
 
 #include <execution>
 #include <p2300/movable_value.hpp>
+#include <p2300/set_error.hpp>
+#include <p2300/set_stopped.hpp>
+#include <p2300/set_value.hpp>
 #include <p2300/start.hpp>
 #include <p2300/operation_state.hpp>
 

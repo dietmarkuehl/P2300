@@ -1,4 +1,4 @@
-// include/p2300/non_associated.hpp                                   -*-C++-*-
+// include/p2300/set_value.hpp                                        -*-C++-*-
 // ----------------------------------------------------------------------------
 //  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
@@ -23,35 +23,36 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
-#define INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#ifndef INCLUDED_INCLUDE_P2300_SET_VALUE
+#define INCLUDED_INCLUDE_P2300_SET_VALUE
+
+#include <functional>
+#include <utility>
 
 // ----------------------------------------------------------------------------
-// [lib.tmpl-head]
 
-#include <type_traits>
-
-namespace std
-{
-    template <class _Ty>
-    struct _Non_associated_entity
-    {
-        struct _Type
-        {
-            using type = _Ty;
+namespace std {
+    namespace _Set_value {
+        class _Cpo {
+        public:
+            template <class _Receiver, class... _Args>
+                requires nothrow_tag_invocable<_Cpo, _Receiver, _Args...>
+            auto operator()(_Receiver&& __receiver, _Args&&... __args) const noexcept -> void
+            {
+                std::tag_invoke(*this, std::forward<_Receiver>(__receiver), std::forward<_Args>(__args)...);
+            }
         };
-    };
+    }
 
-    template <class _Ty>
-    using __unassociate = typename _Non_associated_entity<_Ty>::_Type;
+    namespace execution {
+        using set_value_t = _Set_value::_Cpo;
+        inline namespace _Cpos {
+            inline constexpr set_value_t set_value{};
+        }
+    }
+}
 
-    template <class _Ty>
-    using __reassociate = typename _Ty::type;
-
-    template <class _Ty>
-    concept __non_associated = same_as<_Ty, __unassociate<__reassociate<_Ty>>>;
-} // namespace std
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#endif

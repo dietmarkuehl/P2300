@@ -1,4 +1,4 @@
-// include/p2300/non_associated.hpp                                   -*-C++-*-
+// include/p2300/set_error.hpp                                        -*-C++-*-
 // ----------------------------------------------------------------------------
 //  Copyright (C) 2022 Dietmar Kuehl http://www.dietmar-kuehl.de
 //
@@ -23,35 +23,35 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#ifndef INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
-#define INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#ifndef INCLUDED_INCLUDE_P2300_SET_ERROR
+#define INCLUDED_INCLUDE_P2300_SET_ERROR
+
+#include <functional>
+#include <utility>
 
 // ----------------------------------------------------------------------------
-// [lib.tmpl-head]
 
-#include <type_traits>
-
-namespace std
-{
-    template <class _Ty>
-    struct _Non_associated_entity
-    {
-        struct _Type
-        {
-            using type = _Ty;
+namespace std {
+    namespace _Set_error {
+        class _Cpo {
+        public:
+            template <class _Receiver, class _Error>
+                requires nothrow_tag_invocable<_Cpo, _Receiver, _Error>
+            auto operator()(_Receiver&& __receiver, _Error&& __error) const noexcept -> void
+            {
+                std::tag_invoke(*this, std::forward<_Receiver>(__receiver), std::forward<_Error>(__error));
+            }
         };
-    };
+    }
 
-    template <class _Ty>
-    using __unassociate = typename _Non_associated_entity<_Ty>::_Type;
-
-    template <class _Ty>
-    using __reassociate = typename _Ty::type;
-
-    template <class _Ty>
-    concept __non_associated = same_as<_Ty, __unassociate<__reassociate<_Ty>>>;
-} // namespace std
+    namespace execution {
+        using set_error_t = _Set_error::_Cpo;
+        inline namespace _Cpos {
+            inline constexpr set_error_t set_error{};
+        }
+    }
+}
 
 // ----------------------------------------------------------------------------
 
-#endif // INCLUDED_INCLUDE_P2300_NON_ASSOCIATED
+#endif

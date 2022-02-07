@@ -41,7 +41,7 @@ namespace std {
                     && std::is_lvalue_reference_v<_OperationState>
             auto operator()(_OperationState&& __state) const noexcept -> void
             {
-                tag_invoke(*this, __state);
+                std::tag_invoke(*this, __state);
             }
         };
     }
